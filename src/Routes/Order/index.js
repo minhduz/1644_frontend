@@ -16,6 +16,7 @@ import { AspectRatio } from "@mui/joy";
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
+  const [total, setTotal] = useState(0);
   const [orderDetail, setOrderDetail] = useState({
     items: [],
     totalBill: 0,
@@ -63,6 +64,20 @@ export default function Orders() {
         console.log(err);
         return;
       });
+
+    axios
+      .get(`${api_endpoint}/order/total`, { withCredentials: true })
+      .then((res) => {
+        if (res.status === 200) {
+          console.log(res.data);
+          setTotal(res.data);
+        }
+        return;
+      })
+      .catch((err) => {
+        console.log(err);
+        return;
+      });
   }, []);
 
   return (
@@ -89,6 +104,7 @@ export default function Orders() {
             handleOpenOrderDetail(row.id);
           }}
         />
+        <Typography>Total Money: {total}</Typography>
       </Container>
       <Dialog open={orderDetailVisible} onClose={handleCloseOrderDetail}>
         <CssBaseline />
